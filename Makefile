@@ -1,76 +1,114 @@
-# Files
-SRCS = ft_isalpha.c\
-	ft_isdigit.c\
-	ft_isalnum.c\
-	ft_isascii.c\
-	ft_isprint.c\
-	ft_strlen.c\
-	ft_memset.c\
-	ft_bzero.c\
-	ft_memcpy.c\
-	ft_memmove.c\
-	ft_strlcpy.c\
-	ft_strdup.c\
-	ft_strlcat.c\
-	ft_toupper.c\
-	ft_calloc.c\
-	ft_tolower.c\
-	ft_strchr.c\
-	ft_strrchr.c\
-	ft_strncmp.c\
-	ft_split.c\
-	ft_strtrim.c\
-	ft_memchr.c\
-	ft_memcmp.c\
-	ft_strjoin.c\
-	ft_strnstr.c\
-	ft_substr.c\
-	ft_strmapi.c\
-	ft_striteri.c\
-	ft_putchar_fd.c\
-	ft_putstr_fd.c\
-	ft_putendl_fd.c\
-	ft_putnbr_fd.c\
-	ft_atoi.c\
-	ft_itoa.c
-OBJS = ${SRCS:.c=.o}
+# Basic makefile for my static libs
+# 
+# Configuration
+#---------------------------------------------------
 
-BONUS = ft_lstnew.c\
-	ft_lstadd_front.c\
-	ft_lstsize.c\
-	ft_lstadd_back.c\
-	ft_lstdelone.c\
-	ft_lstclear.c\
-	ft_lstiter.c\
-	ft_lstmap.c\
-	ft_lstlast.c
-BONUS_OBJS =  ${BONUS:.c=.o}
-
-# Executable
+# Output
 NAME = libft.a
 
+# Sources directories
+SRCS_DIR = srcs
+OBJS_DIR = objs
+UTILS_DIR = utils
+
 # Utils
-CFLAGS =  -Wall -Wextra -Werror
-CC = clang 
+CC = clang
+CFLAGS = -MMD -Wall -Wextra -Werror
+CPPFLAGS = -I ./$(UTILS_DIR)
 RM = rm -rf
 
-.c.o:
-	${CC} ${CFLAGS} -c $< -o ${<:$%.c=$%.o}
+# Sources files
+SOURCES = ft_isalpha.c \
+	ft_isdigit.c \
+	ft_isalnum.c \
+	ft_isascii.c \
+	ft_isprint.c \
+	ft_strlen.c \
+	ft_memset.c \
+	ft_bzero.c \
+	ft_memcpy.c \
+	ft_memmove.c \
+	ft_strlcpy.c \
+	ft_strdup.c \
+	ft_strlcat.c \
+	ft_toupper.c \
+	ft_calloc.c \
+	ft_tolower.c \
+	ft_strchr.c \
+	ft_strrchr.c \
+	ft_strncmp.c \
+	ft_split.c \
+	ft_strtrim.c \
+	ft_memchr.c \
+	ft_memcmp.c \
+	ft_strjoin.c \
+	ft_strnstr.c \
+	ft_substr.c \
+	ft_strmapi.c \
+	ft_striteri.c \
+	ft_putchar_fd.c \
+	ft_putstr_fd.c \
+	ft_putendl_fd.c \
+	ft_putnbr_fd.c \
+	ft_atoi.c \
+	ft_itoa.c
+BONUS = ft_lstnew.c \
+	ft_lstadd_front.c \
+	ft_lstsize.c \
+	ft_lstadd_back.c \
+	ft_lstdelone.c \
+	ft_lstclear.c \
+	ft_lstiter.c \
+	ft_lstmap.c \
+	ft_lstlast.c
 
-${NAME}: ${OBJS} 
+# Colors
+GREEN   = \033[1;32m
+WHITE   = \033[0;m
+
+#---------------------------------------------------
+
+# Header files
+UTILS = $(UTILS_DIR)/$(addsufix .h, $(NAME))
+
+SRCS = $(addprefix $(SRCS_DIR)/, $(SOURCES))
+OBJS = $(addprefix $(OBJS_DIR)/, $(SOURCES:.c=.o))
+OBJS_BONUS = $(addprefix $(OBJS_DIR)/, $(BONUS:.c=.o))
+DEPS = $(addprefix $(OBJS_DIR)/, $(OBJS:.o=.d))
+DEPS_BONUS = $(addprefix $(OBJS_DIR)/, $(OBJS_BONUS:.o=.d))
+
+all: $(NAME)
+
+$(NAME): $(OBJS) 
+	echo "-------------------"
 	ar -rcs ${NAME} ${OBJS}
+	printf "\n[$(GREEN)OK$(WHITE)] Library : $(NAME)\n\n"
 
-all: ${NAME}
+$(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
+	mkdir -p $(OBJS_DIR) 
+	$(CC) $(CFLAGS) $(CPPFLAGS) -o $@ -c $<
+	printf "[$(GREEN)OK$(WHITE)] $<\n"
 
 clean:
-	${RM} ${OBJS} ${BONUS_OBJS}
+	$(RM) $(OBJS_DIR)
+	printf "[$(GREEN)removed$(WHITE)] $(OBJS_DIR)/\n"
 
 fclean: clean
-	${RM} ${NAME}
+	$(RM) $(NAME)
+	printf "[$(GREEN)removed$(WHITE)] $(NAME)\n"
 
 re: fclean all
 
-bonus: ${OBJS} ${BONUS_OBJS} 
-	ar -rcs ${NAME} ${OBJS} ${BONUS_OBJS}
+bonus: ${OBJS} ${OBJS_BONUS} 
+	echo "-------------------"
+	ar -rcs ${NAME} ${OBJS} ${OBJS_BONUS}
+	printf "\n[$(GREEN)OK$(WHITE)] Library with bonus : $(NAME)\n\n"
+
+-include $(DEPS) $(DEPS_BONUS)
 
 .PHONNY: all clean fclean re
+
+# Set VERBOSE=1 for verbose
+ifndef VERBOSE
+.SILENT:
+endif
