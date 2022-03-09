@@ -6,7 +6,7 @@
 /*   By: jfrancai <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 15:11:14 by jfrancai          #+#    #+#             */
-/*   Updated: 2022/03/09 11:51:57 by jfrancai         ###   ########.fr       */
+/*   Updated: 2022/03/09 12:10:03 by jfrancai         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define LIBFT_H
 # include <stdlib.h>
 # include <unistd.h>
-# define A 1
 
 typedef struct s_list
 {
