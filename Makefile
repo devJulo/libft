@@ -18,7 +18,7 @@ CPPFLAGS = -I ./$(UTILS_DIR)
 RM = rm -rf
 
 # Sources files
-SOURCES = ft_isalpha.c \
+SRCS = ft_isalpha.c \
 	ft_isdigit.c \
 	ft_isalnum.c \
 	ft_isascii.c \
@@ -71,11 +71,10 @@ WHITE   = \033[0;m
 # Header files
 UTILS = $(UTILS_DIR)/$(addsufix .h, $(NAME))
 
-SRCS = $(addprefix $(SRCS_DIR)/, $(SOURCES))
-OBJS = $(addprefix $(OBJS_DIR)/, $(SOURCES:.c=.o))
-OBJS_BONUS = $(addprefix $(OBJS_DIR)/, $(BONUS:.c=.o))
-DEPS = $(addprefix $(OBJS_DIR)/, $(OBJS:.o=.d))
-DEPS_BONUS = $(addprefix $(OBJS_DIR)/, $(OBJS_BONUS:.o=.d))
+OBJS = $(SRCS:%.c=$(OBJS_DIR)/%.o)
+OBJS_BONUS = $(BONUS:%.c=$(OBJS_DIR)/%.o)
+DEPS = $(OBJS:%.o=%.d)
+DEPS_BONUS = $(OBJS_BONUS:%.o=%.d)
 
 all: $(NAME)
 
@@ -99,9 +98,9 @@ fclean: clean
 
 re: fclean all
 
-bonus: ${OBJS} ${OBJS_BONUS} 
+bonus: $(OBJS) $(OBJS_BONUS)
 	echo "-------------------"
-	ar -rcs ${NAME} ${OBJS} ${OBJS_BONUS}
+	ar -rcs $(NAME) $(OBJS) $(OBJS_BONUS)
 	printf "\n[$(GREEN)OK$(WHITE)] Library with bonus : $(NAME)\n\n"
 
 -include $(DEPS) $(DEPS_BONUS)
