@@ -12,7 +12,7 @@ OBJS_DIR = objs
 UTILS_DIR = utils
 
 # Utils
-CC = clang
+CC = cc
 CFLAGS = -MMD -Wall -Wextra -Werror
 CPPFLAGS = -I ./$(UTILS_DIR)
 RM = rm -rf
